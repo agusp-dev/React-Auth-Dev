@@ -1,35 +1,30 @@
-import React, { Fragment, useRef, useState } from 'react'
+import React, { Fragment, useState, useRef } from 'react'
 import { Card, Form, Button, Alert } from 'react-bootstrap'
-import { useAuth } from '../context/AuthContext'
 import { Link, useHistory } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
-const Signup = () => {
+const Login = () => {
 
 	const emailRef = useRef()
 	const passwordRef = useRef()
-	const passwordConfirmRef = useRef()
 	const history = useHistory()
-	const { signup } = useAuth()
+	const { login } = useAuth()
 
 	const [error, setError] = useState('')
 
 	const onHandleSubmit = e => {
 		e.preventDefault()
 		setError('')
-		const password = passwordRef.current.value
-		const confirmPassword = passwordConfirmRef.current.value
-		if (!validateEqualsPasswords(password, confirmPassword)) {
-			return setError('Passwords not Equals!')
-		}
 		const email = emailRef.current.value
-		setSignup(email, password)
+		const password = passwordRef.current.value
+		setLogin(email, password)
 	}
 
-	const setSignup = async (e, p) => {
+	const setLogin = async (e, p) => {
 		try {
-			const result = await signup(e, p)
+			const result = await login(e, p)
 			if (result && result.user && Object.keys(result.user).length > 0) {
-				history.push('/login')
+				history.push('/')
 			} else {
 				setError('Firebase Error')
 			}
@@ -38,15 +33,13 @@ const Signup = () => {
 		} 
 	}
 
-	const validateEqualsPasswords = (password, confirmed) => {
-		return password === confirmed
-	}
+	
 
 	return (
 		<Fragment>
 			<Card>
 				<Card.Body>
-					<h2 className='text-center mb-4'>Sign Up</h2>
+					<h2 className='text-center mb-4'>Sign In</h2>
 					{error && (
 						<Alert variant='danger'>{ error }</Alert>
 					)}
@@ -67,27 +60,22 @@ const Signup = () => {
 								required
 							/>
 						</Form.Group>
-						<Form.Group id='password-confirm'>
-							<Form.Label>Password Confirm</Form.Label>
-							<Form.Control 
-								type='password'
-								ref={ passwordConfirmRef }
-								required
-							/>
-						</Form.Group>
 						<Button 
 							type='submit'
 							className='w-100'
-						>Sign Up
+						>Sign In
 						</Button>
 					</Form>
+					<div className='w-100 text-center mt-3'>
+						<Link to='/forgotpassword'>Forgot Password</Link>
+					</div>
 				</Card.Body>
 			</Card>
 			<div className='w-100 text-center mt-2'>
-				Already have an account? <Link to='/login'>Sign In</Link>
+				Need an account? <Link to='/signup'>Sign Up</Link>
 			</div>
 		</Fragment>
 	)
 }
 
-export { Signup }
+export { Login }

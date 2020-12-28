@@ -1,5 +1,7 @@
-import { Signup } from './components'
+import { PrivateRoute, Signup, Dashboard, Login, ForgotPassword } from './components'
 import { Container } from 'react-bootstrap' 
+import AuthProvider from './context/AuthContext'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 function App() {
   return (
@@ -9,7 +11,16 @@ function App() {
 			<div 
 				className='w-100'
 				style={{ maxWidth: '400px' }}>
-					<Signup />
+					<Router>
+						<AuthProvider>
+							<Switch>
+								<PrivateRoute exact path='/' component={ Dashboard } />
+								<Route path='/signup' component={ Signup } />
+								<Route path='/login' component={ Login }/>
+								<Route path='/forgotpassword' component={ ForgotPassword }/>
+							</Switch>
+						</AuthProvider>
+					</Router>
 			</div>
 		</Container>
   )
